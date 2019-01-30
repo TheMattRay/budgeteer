@@ -1,26 +1,36 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab One
+      Budget
     </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button [routerLink]="['/edit', 0]">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-card class="welcome-card">
-      <ion-img src="/assets/shapes.svg"></ion-img>
-      <ion-card-header>
-        <ion-card-subtitle>Get Started</ion-card-subtitle>
-        <ion-card-title>Welcome to Ionic</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
-      </ion-card-content>
-    </ion-card>
     <ion-list lines="none">
-      <ion-list-header>
-        <ion-label>Resources</ion-label>
-      </ion-list-header>
+      <!--<ion-list-header>-->
+        <!--<ion-label>Resources</ion-label>-->
+      <!--</ion-list-header>-->
+      <ion-item *ngFor="let budgetItem of listOfBudgetItems" [routerLink]="['/edit', budgetItem.id]">
+        <ion-label text-wrap>
+          <ion-text color="primary">
+            <span>{{budgetItem.name}}</span>
+          </ion-text>
+          <ion-text color="secondary">
+            <span>{{budgetItem.averagePayment}}</span>
+          </ion-text>
+          <ion-text color="primary">
+            <span>{{budgetItem.dueDay}}</span>
+          </ion-text>
+        </ion-label>
+        <ion-icon slot="end" color="medium" [name]="isChecked(budgetItem)"></ion-icon>
+        <!--<ion-icon slot="start" color="medium" name="book"></ion-icon>-->
+      </ion-item>
       <ion-item href="https://ionicframework.com/docs/">
         <ion-icon slot="start" color="medium" name="book"></ion-icon>
         <ion-label>Ionic Documentation</ion-label>
