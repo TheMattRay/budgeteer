@@ -27,7 +27,6 @@ export class FirebaseService {
           this.token = token;
           this.path = '/data/' + this.guid;
           this.rootReference = this.afs.database.ref(this.path);
-          console.log(this.guid);
           resolve();
         });
       });
@@ -39,7 +38,6 @@ export class FirebaseService {
       this.authenticate().then(() => {
         this.afs.object(this.path).valueChanges().subscribe(item => {
           this.lastData = item;
-          console.log(item);
           const result: DataDumpClass = new DataDumpClass(item);
           resolve(result);
         });

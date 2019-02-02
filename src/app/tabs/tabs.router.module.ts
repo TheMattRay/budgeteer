@@ -13,10 +13,6 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../budget/budget.module#BudgetPageModule'
-          },
-          {
-            path: 'edit',
-            loadChildren: '../budget/edit/edit.module#EditPageModule'
           }
         ]
       },

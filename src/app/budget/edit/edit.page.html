@@ -1,9 +1,44 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Budget Item</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button [routerLink]="trashRoute">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-
+  <ion-item>
+    <ion-label>Name:</ion-label>
+    <ion-input [(ngModel)]="this.stateService.currentBudgetItem.name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Occurs Every Pay Period:</ion-label>
+    <ion-checkbox [(ngModel)]="stateService.currentBudgetItem.everyPayPeriod"></ion-checkbox>
+  </ion-item>
+  <ion-item>
+    <ion-label>Include In Calculations:</ion-label>
+    <ion-checkbox [(ngModel)]="stateService.currentBudgetItem.includeInCalculations"></ion-checkbox>
+  </ion-item>
+  <ion-item>
+    <ion-label>Due Date:</ion-label>
+    <ion-input [(ngModel)]="stateService.currentBudgetItem.dueDay" type="number"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Average Payment:</ion-label>
+    <ion-input [(ngModel)]="stateService.currentBudgetItem.averagePayment" type="number"
+            placeholder="$"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Note:</ion-label>
+    <ion-input [(ngModel)]="stateService.currentBudgetItem.note"></ion-input>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-button color="primary" (click)="stateService.saveBudgetItem()" size="large">Save</ion-button>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-button color="secondary" [routerLink]="['/tabs/budget']">Cancel</ion-button>
+  </ion-item>
 </ion-content>

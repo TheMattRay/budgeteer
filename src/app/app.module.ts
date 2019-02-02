@@ -5,10 +5,11 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {SharedModule} from './shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,7 +18,8 @@ import {SharedModule} from './shared/shared.module';
       BrowserModule,
       IonicModule.forRoot(),
       AppRoutingModule,
-      SharedModule.forRoot()
+      SharedModule.forRoot(),
+      FormsModule
   ],
   providers: [
     StatusBar,
