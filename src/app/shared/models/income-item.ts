@@ -5,4 +5,5 @@ export interface IncomeItem {
     expectedPay: number;
     actualPay: number;
     carryover: number;
+    active: boolean;
 }

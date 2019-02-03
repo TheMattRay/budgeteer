@@ -30,6 +30,8 @@
         Paid
       </ion-col>
     </ion-row>
+  </ion-grid>
+  <ion-grid>
     <ion-row *ngFor="let budgetItem of listOfBudgetItems" [routerLink]="['/tabs/budget/edit', budgetItem.id]">
       <ion-col>
         {{budgetItem.name}}

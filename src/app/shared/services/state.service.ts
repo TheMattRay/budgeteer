@@ -4,6 +4,7 @@ import {DataDumpClass} from '../models/data-dump';
 import {TransactionItem} from '../models/transaction-item';
 import {Router} from '@angular/router';
 import {FirebaseService} from './firebase.service';
+import {IncomeItem} from '../models/income-item';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class StateService {
   public currentTransactionItem: TransactionItem;
   public currentBudget: BudgetItem[];
   public currentTransactions: TransactionItem[];
-  public currentIncome: any;
+  public currentIncome: IncomeItem;
   public currentSettings: any;
 
   constructor(
@@ -25,10 +26,14 @@ export class StateService {
   }
 
   private initThisB() {
+    this.newBudgetItem();
+    this.currentBudget = [];
+    this.currentTransactions = [];
+    this.currentIncome = {} as IncomeItem;
+    this.currentSettings = {};
     this.fbs.getData().then((dataSnapshot: DataDumpClass) => {
       this.setSnapshot(dataSnapshot);
     });
-    this.newBudgetItem();
   }
 
   getJSON(thing: any): string {
@@ -38,7 +43,8 @@ export class StateService {
   setSnapshot(dataSnapshot: DataDumpClass) {
     this.currentDataSnapshot = dataSnapshot;
     this.currentBudget = dataSnapshot.BudgetItems === undefined ? [] : dataSnapshot.BudgetItems;
-    this.currentIncome = dataSnapshot.IncomeItems === undefined ? [] : dataSnapshot.IncomeItems;
+    this.currentIncome = dataSnapshot.IncomeItem === undefined || dataSnapshot.IncomeItem.expectedPay === undefined ?
+        {} as IncomeItem : dataSnapshot.IncomeItem;
     this.currentTransactions = dataSnapshot.TransactionItems === undefined ? [] : dataSnapshot.TransactionItems;
     this.currentSettings = dataSnapshot.Settings === undefined ? {} : dataSnapshot.Settings;
 
@@ -46,7 +52,7 @@ export class StateService {
 
     this.currentDataSnapshot = {
       BudgetItems: this.currentBudget,
-      IncomeItems: this.currentIncome,
+      IncomeItem: this.currentIncome,
       TransactionItems: this.currentTransactions,
       Settings: this.currentSettings
     };

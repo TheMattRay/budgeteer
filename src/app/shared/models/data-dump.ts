@@ -4,27 +4,27 @@ import {TransactionItem} from './transaction-item';
 
 export interface DataDump {
     BudgetItems: BudgetItem[];
-    IncomeItems: IncomeItem[];
+    IncomeItem: IncomeItem;
     TransactionItems: TransactionItem[];
     Settings: any;
 }
 
 export class DataDumpClass implements DataDump {
     public BudgetItems: BudgetItem[];
-    public IncomeItems: IncomeItem[];
+    public IncomeItem: IncomeItem;
     public TransactionItems: TransactionItem[];
     public Settings: any;
 
     constructor(item: any) {
         if (item === null) {
             this.BudgetItems = [];
-            this.IncomeItems = [];
+            this.IncomeItem = {} as IncomeItem;
             this.TransactionItems = [];
             this.Settings = {};
             return;
         }
         this.BudgetItems = item.BudgetItems;
-        this.IncomeItems = item.IncomeItems;
+        this.IncomeItem = item.IncomeItem;
         this.TransactionItems = item.TransactionItems;
         this.Settings = item.Settings;
     }

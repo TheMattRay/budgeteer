@@ -18,14 +18,17 @@ export class CalculatorService {
     } else {
       const today = new Date();
       const targetDate: Date = dataSnapshot.Settings.PayPeriodStart;
+      let measureDate: Date = targetDate;
       if (targetDate === null) {
         return(this.GetAssumedPayPeriod());
       }
       do {
         targetDate.setDate(targetDate.getDate() + 14);
-      } while (targetDate <= today && new Date(targetDate.getDate() + 14) <= today);
+        measureDate = targetDate;
+        measureDate.setDate(targetDate.getDate() + 14);
+      } while (targetDate <= today && measureDate <= today);
 
-      return(new PayPeriodClass(targetDate, new Date(targetDate.getDate() + 14)));
+      return(new PayPeriodClass(targetDate, measureDate));
     }
   }
 
@@ -33,12 +36,15 @@ export class CalculatorService {
     const startDate = new Date(2019, 1, 18);
     const today = new Date();
     const targetDate = startDate;
+    let measureDate = targetDate;
 
     do {
       targetDate.setDate(targetDate.getDate() + 14);
-    } while (targetDate <= today && new Date(targetDate.getDate() + 14) <= today);
+      measureDate = targetDate;
+      measureDate.setDate(targetDate.getDate() + 14);
+    } while (targetDate <= today && measureDate <= today);
 
-    return new PayPeriodClass(targetDate, new Date(targetDate.getDate() + 14));
+    return new PayPeriodClass(targetDate, measureDate);
   }
 
   GetCurrentPayPeriodTransactionTotals(dataSnapshot: DataDumpClass): any {

@@ -3,7 +3,102 @@
     <ion-title>
       Income
     </ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="left()">
+        <ion-icon slot="icon-only" name="arrow-dropleft-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="right()">
+        <ion-icon slot="icon-only" name="arrow-dropright-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <ion-item lines="none">
+    <ion-label>{{getCurrentPayPeriod()}}</ion-label>
+  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-label>Pay</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Expected:</ion-label>
+          <ion-input [(ngModel)]="stateService.currentIncome.expectedPay"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label>Actual:</ion-label>
+          <ion-input [(ngModel)]="stateService.currentIncome.actualPay"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label>Estimated Expenses</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Expected:</ion-label>
+          <ion-input [(ngModel)]="expectedExpenses"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label>Est I - E:</ion-label>
+          <ion-input [(ngModel)]="expectedRemainingAfterExpenses"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label>Actual Expenses</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Current:</ion-label>
+          <ion-input [(ngModel)]="currentTransactionTotal"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label>To Go:</ion-label>
+          <ion-input [(ngModel)]="remainingExpenses"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label>Misc</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Carryover:</ion-label>
+          <ion-input [(ngModel)]="stateService.currentIncome.carryover"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label>Est @ End:</ion-label>
+          <ion-input [(ngModel)]="estimatedRemainingBalance"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+</ion-content>
