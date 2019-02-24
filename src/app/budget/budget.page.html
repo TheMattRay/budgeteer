@@ -3,9 +3,6 @@
     <ion-title>
       Budget
     </ion-title>
-    <ion-label>
-      <span>{{this.getGuid()}}</span>
-    </ion-label>
     <ion-buttons slot="primary">
       <ion-button (click)="addBudgetItem()">
         <ion-icon slot="icon-only" name="add"></ion-icon>
@@ -19,7 +16,7 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row>
+    <ion-row style="font-weight: bold;">
       <ion-col>
         Name
       </ion-col>
@@ -38,7 +35,7 @@
     </ion-row>
   </ion-grid>
   <ion-grid>
-    <ion-row *ngFor="let budgetItem of listOfBudgetItems" [routerLink]="['/tabs/budget/edit', budgetItem.id]">
+    <ion-row *ngFor="let budgetItem of listOfBudgetItems" [routerLink]="['/tabs/budget/edit', budgetItem.id]" [class]="getLineClass(budgetItem)">
       <ion-col>
         {{budgetItem.name}}
       </ion-col>
@@ -52,7 +49,7 @@
         {{budgetItem.dueDay}}
       </ion-col>
       <ion-col size="2">
-        <ion-icon slot="end" color="medium" [name]="checkIcon(budgetItem)"></ion-icon>
+        <ion-icon color="medium" [name]="checkIcon(budgetItem)"></ion-icon>
       </ion-col>
     </ion-row>
   </ion-grid>

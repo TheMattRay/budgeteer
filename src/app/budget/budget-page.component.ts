@@ -91,7 +91,7 @@ export class BudgetPage {
         }, {
           text: 'Ok',
           handler: (data) => {
-            this.fbs.setCredentials(data.LoginUsername, data.LoginPassword)
+            this.fbs.setCredentials(data.LoginUsername, data.LoginPassword);
             console.log('Confirm Ok');
           }
         }
@@ -115,6 +115,12 @@ export class BudgetPage {
     } else {
       return 'radio-button-off';
     }
+  }
+
+  getLineClass(budgetItem: BudgetItem): string {
+    const isInPeriod: boolean = this.cs.IsDayInPayPeriod(budgetItem.dueDay,
+      this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot));
+    return isInPeriod ? 'highlight' : '';
   }
 
   getGuid() {

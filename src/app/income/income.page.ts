@@ -77,9 +77,9 @@ export class IncomePage {
 
   calculate() {
     const currentTransactionTotals = this.cs.GetPayPeriodTransactionTotals(this.stateService.currentDataSnapshot);
-    this.expectedExpenses = this.cs.GetExpectedTotalAmount(this.stateService.currentDataSnapshot);
+    this.expectedExpenses = Math.round(this.cs.GetExpectedTotalAmount(this.stateService.currentDataSnapshot, this.currentPayPeriod));
     this.expectedRemainingAfterExpenses = Math.round(this.stateService.currentIncome.expectedPay - this.expectedExpenses);
-    this.currentTransactionTotal = this.cs.GetFullPayPeriodTransactionTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod);
+    this.currentTransactionTotal = Math.round(this.cs.GetFullPayPeriodTransactionTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod));
     this.remainingExpenses = this.cs.GetCurrentPayPeriodRemainingTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod);
     this.estimatedRemainingBalance = Math.round(Number.parseFloat(this.stateService.currentIncome.actualPay.toString()) +
       Number.parseFloat(this.stateService.currentIncome.carryover.toString()) - Number.parseFloat(this.currentTransactionTotal.toString())

@@ -111,10 +111,13 @@ export class CalculatorService {
     }
   }
 
-  GetExpectedTotalAmount(dataSnapshot: DataDumpClass): number {
+  GetExpectedTotalAmount(dataSnapshot: DataDumpClass, payPeriod?: PayPeriodClass): number {
     let expectedTotal = 0;
+    if (payPeriod === null || payPeriod === undefined) {
+      payPeriod = this.GetCurrentPayPeriod(dataSnapshot);
+    }
     dataSnapshot.BudgetItems.forEach(budgetItem => {
-      if (budgetItem.everyPayPeriod === true || this.IsDayInPayPeriod(budgetItem.dueDay, this.GetCurrentPayPeriod(dataSnapshot) )) {
+      if (budgetItem.everyPayPeriod === true || this.IsDayInPayPeriod(budgetItem.dueDay, payPeriod )) {
         expectedTotal += budgetItem.averagePayment;
       }
     });
