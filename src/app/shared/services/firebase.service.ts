@@ -29,7 +29,7 @@ export class FirebaseService {
     return this.username;
   }
 
-  public setCredentials(username:string, password: string) {
+  public setCredentials(username: string, password: string) {
     this.username = username;
     this.password = password;
     this.afauth.auth.signInWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
