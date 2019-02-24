@@ -16,8 +16,8 @@
   </ion-item>
   <ion-item>
     <ion-label>Type:</ion-label>
-    <ion-select placeholder="Select Type">
-      <ion-select-option *ngFor="let budgetItem of getBudgetSortedByName()" (value)="budgetItem.nane" (change)="budgetItemChanged()">{{budgetItem.name}}</ion-select-option>
+    <ion-select class="selector" placeholder="Select Type" (ionChange)="budgetItemChanged($event)">
+      <ion-select-option *ngFor="let budgetItem of getBudgetSortedByName()" (value)="budgetItem.nane">{{budgetItem.name}}</ion-select-option>
     </ion-select>
   </ion-item>
   <ion-item>

@@ -50,7 +50,9 @@ export class EditTransactionPage implements OnInit {
     this.stateService.saveTransactionItem();
   }
 
-  budgetItemChanged(item: BudgetItem) {
+  budgetItemChanged(event: CustomEvent) {
+    console.log(event);
+    const item: BudgetItem = this.stateService.getBudgetItemByName(event.detail.value);
     this.stateService.currentTransactionItem.estimatedAmount = item.averagePayment;
   }
 }

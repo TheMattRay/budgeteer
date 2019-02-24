@@ -189,6 +189,12 @@ export class StateService {
     }
     return 0;
   }
+
+  getBudgetItemByName(name: string): BudgetItem {
+    return this.currentBudget.find((value: BudgetItem, index: number, obj: BudgetItem[]) => {
+      return value.name === name;
+    });
+  }
 }
 
 
