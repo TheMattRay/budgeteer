@@ -16,7 +16,7 @@ import {Router} from '@angular/router';
   templateUrl: 'budget.page.html',
   styleUrls: ['budget.page.scss']
 })
-export class BudgetPage implements OnInit {
+export class BudgetPage {
   @ViewChild( EditPage )
     private editPage: EditPage;
 
@@ -32,7 +32,7 @@ export class BudgetPage implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ionViewDidEnter() {
     // Retrieve list of budget items from storage
     this.fbs.getData().then((dataSnapshot: DataDumpClass) => {
       this.stateService.setSnapshot(dataSnapshot);
@@ -101,10 +101,8 @@ export class BudgetPage implements OnInit {
     await alert.present();
   }
 
-
-
   getActual(budgeItem: BudgetItem): number {
-    return this.cs.GetCurrentPayPeriodTotalForCategory(budgeItem.name, this.stateService.currentDataSnapshot);
+    return this.cs.GetPayPeriodTotalForCategory(budgeItem.name, this.stateService.currentDataSnapshot);
   }
 
   isChecked(budgetItem: BudgetItem): boolean {

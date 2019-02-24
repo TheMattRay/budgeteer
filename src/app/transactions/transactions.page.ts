@@ -13,7 +13,7 @@ import { EditTransactionPage } from './edit-transaction/edit-transaction.page';
   templateUrl: 'transactions.page.html',
   styleUrls: ['transactions.page.scss']
 })
-export class TransactionsPage implements OnInit {
+export class TransactionsPage {
   @ViewChild( EditTransactionPage )
   private editPage: EditTransactionPage;
 
@@ -28,7 +28,7 @@ export class TransactionsPage implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ionViewDidEnter() {
     // Retrieve list of budget items from storage
     this.fbs.getData().then((dataSnapshot: DataDumpClass) => {
       this.stateService.setSnapshot(dataSnapshot);
@@ -48,7 +48,6 @@ export class TransactionsPage implements OnInit {
         }
         return 0;
       });
-
       // Set pay period
       this.payPeriod = this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot);
     });
@@ -59,5 +58,14 @@ export class TransactionsPage implements OnInit {
 
     this.router.navigate(['/tabs/transactions/edit']).then((value: boolean) => {
     });
+  }
+
+  formatShortDate(period: Date) {
+    return period.getMonth() + 1 + '/' + period.getDate() + '/' + period.getFullYear();
+  }
+
+  formatShortDateString(stringDate: string) {
+    const period = new Date(stringDate);
+    return period.getMonth() + 1 + '/' + period.getDate() + '/' + period.getFullYear();
   }
 }

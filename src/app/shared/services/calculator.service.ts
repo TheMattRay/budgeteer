@@ -51,14 +51,13 @@ export class CalculatorService {
   GetCurrentPayPeriodRemainingTotal(dataSnapshot: DataDumpClass, payPeriod: PayPeriodClass) {
     let remainingTotal = 0;
     const activeBudgetItems = this.GetBudgetItemsForPayPeriod(dataSnapshot, payPeriod);
-    const activeTransactions = this.GetFullPayPeriodTransactionTotal(dataSnapshot, payPeriod);
     activeBudgetItems.forEach(budgetItem => {
-      let transactionTotal = activeTransactions[budgetItem.name];
-      if (transactionTotal == null) {
-        transactionTotal = 0;
+      let activeTransactions = this.GetPayPeriodTotalForCategory(budgetItem.name, dataSnapshot, payPeriod);
+      if (activeTransactions === null || activeTransactions === undefined) {
+        activeTransactions = 0;
       }
-      if (transactionTotal < budgetItem.averagePayment) {
-        remainingTotal += (budgetItem.averagePayment - transactionTotal);
+      if (activeTransactions < budgetItem.averagePayment) {
+        remainingTotal += (budgetItem.averagePayment - activeTransactions);
       }
     });
     return remainingTotal;
@@ -75,23 +74,24 @@ export class CalculatorService {
     const totals = this.GetPayPeriodTransactionTotals(dataSnapshot, payPeriod);
     let total = 0;
     Object.keys(totals).forEach(key => {
-      total += totals[key];
+      total += Number.parseFloat(totals[key]);
     });
     return total;
   }
 
   GetPayPeriodTransactionTotals(dataSnapshot: DataDumpClass, payPeriod?: PayPeriodClass): any {
     const currentTotals = {};
-    if (dataSnapshot.TransactionItems === null) {
+    if (dataSnapshot.TransactionItems === null || dataSnapshot.TransactionItems === undefined) {
       return currentTotals;
     }
     if (payPeriod == null) {
       payPeriod = this.GetCurrentPayPeriod(dataSnapshot);
     }
     dataSnapshot.TransactionItems.map((value: TransactionItem, index: number, array: TransactionItem[]) => {
-      if (value.transactionDate.getTime() >= payPeriod.StartDate.getTime()
-      && value.transactionDate.getTime() <= payPeriod.EndDate.getTime()) {
-        if (currentTotals[value.transactionType] === null) {
+      const txTime = new Date(value.transactionDate).getTime();
+      if (txTime >= payPeriod.StartDate.getTime()
+      && txTime <= payPeriod.EndDate.getTime()) {
+        if (currentTotals[value.transactionType] === null || currentTotals[value.transactionType] === undefined) {
           currentTotals[value.transactionType] = value.actualAmount;
         } else {
           currentTotals[value.transactionType] = currentTotals[value.transactionType] + value.actualAmount;
@@ -102,8 +102,8 @@ export class CalculatorService {
     return currentTotals;
   }
 
-  GetCurrentPayPeriodTotalForCategory(category: string, dataSnapshot: DataDumpClass): number {
-    const currentTotals = this.GetPayPeriodTransactionTotals(dataSnapshot);
+  GetPayPeriodTotalForCategory(category: string, dataSnapshot: DataDumpClass, payPeriod?: PayPeriodClass): number {
+    const currentTotals = this.GetPayPeriodTransactionTotals(dataSnapshot, payPeriod);
     if (currentTotals[category] === null) {
       return 0;
     } else {
@@ -154,7 +154,7 @@ export class CalculatorService {
       return false;
     }
     const expectedAmount: number = this.GetExpectedAmountForCategory(category, dataSnapshot);
-    const actualAmount: number = this.GetCurrentPayPeriodTotalForCategory(category, dataSnapshot);
+    const actualAmount: number = this.GetPayPeriodTotalForCategory(category, dataSnapshot);
     return actualAmount >= expectedAmount;
   }
 }

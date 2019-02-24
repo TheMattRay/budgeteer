@@ -12,7 +12,6 @@ import { BudgetItem } from 'src/app/shared/models/budget-item';
 export class EditTransactionPage implements OnInit {
   private trashRoute = 'delete';
   private id: number = null;
-  private transactionDate: string;
 
   constructor(
       private route: ActivatedRoute,
@@ -30,7 +29,6 @@ export class EditTransactionPage implements OnInit {
       this.trashRoute = '/tabs/transactions';
       this.stateService.newTransactionItem();
     }
-    this.transactionDate = this.stateService.currentTransactionItem.transactionDate.toISOString();
   }
 
   getBudgetSortedByName() {
@@ -46,13 +44,12 @@ export class EditTransactionPage implements OnInit {
   }
 
   saveTransactionItem() {
-    this.stateService.currentTransactionItem.transactionDate = new Date(this.transactionDate);
     this.stateService.saveTransactionItem();
   }
 
   budgetItemChanged(event: CustomEvent) {
-    console.log(event);
     const item: BudgetItem = this.stateService.getBudgetItemByName(event.detail.value);
     this.stateService.currentTransactionItem.estimatedAmount = item.averagePayment;
+    this.stateService.currentTransactionItem.transactionType = item.name;
   }
 }

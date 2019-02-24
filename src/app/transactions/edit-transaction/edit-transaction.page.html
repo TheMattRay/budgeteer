@@ -12,7 +12,7 @@
 <ion-content padding>
   <ion-item>
     <ion-label>Date:</ion-label>
-    <ion-datetime display-format="MM/DD/YYYY" picker-format="MM DD YYYY" [(ngModel)]="this.transactionDate"></ion-datetime>
+    <ion-datetime display-format="MM/DD/YYYY" picker-format="MM DD YYYY" [(ngModel)]="stateService.currentTransactionItem.transactionDate"></ion-datetime>
   </ion-item>
   <ion-item>
     <ion-label>Type:</ion-label>

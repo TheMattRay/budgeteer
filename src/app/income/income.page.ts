@@ -13,7 +13,7 @@ import { IncomeItem } from '../shared/models/income-item';
   templateUrl: 'income.page.html',
   styleUrls: ['income.page.scss']
 })
-export class IncomePage implements OnInit {
+export class IncomePage {
   private currentPayPeriod: PayPeriodClass;
   private expectedPay: number;
   private actualPay: number;
@@ -34,7 +34,7 @@ export class IncomePage implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  ionViewDidEnter() {
     // Use generic placeholders
     this.currentPayPeriod = new PayPeriodClass(new Date(), new Date());
 
@@ -65,7 +65,10 @@ export class IncomePage implements OnInit {
   }
 
   getCurrentPayPeriod() {
-    return this.formatShortDate(this.currentPayPeriod.StartDate) + ' - ' + this.formatShortDate(this.currentPayPeriod.EndDate);
+    if (this.currentPayPeriod !== null && this.currentPayPeriod !== undefined) {
+      return this.formatShortDate(this.currentPayPeriod.StartDate) + ' - ' + this.formatShortDate(this.currentPayPeriod.EndDate);
+    }
+    return '';
   }
 
   formatShortDate(period: Date) {

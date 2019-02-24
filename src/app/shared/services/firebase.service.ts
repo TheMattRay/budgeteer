@@ -130,7 +130,7 @@ export class FirebaseService {
       this.authenticate().then(() => {
         this.afs.object(this.budgeteerCredential.path).set(value)
             .then(_ => {
-              console.log('success');
+              // console.log('success');
               resolve();
             })
             .catch(err => {

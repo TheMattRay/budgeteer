@@ -1,6 +1,6 @@
 export interface TransactionItem {
     id: number;
-    transactionDate: Date;
+    transactionDate: string;
     transactionType: string;
     estimatedAmount: number;
     actualAmount: number;

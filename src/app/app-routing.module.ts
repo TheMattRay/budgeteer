@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: 'tabs/budget/edit', loadChildren: './budget/edit/edit.module#EditPageModule' },
   { path: 'tabs/budget/edit/:id', loadChildren: './budget/edit/edit.module#EditPageModule' },
   { path: 'tabs/transactions/edit', loadChildren: './transactions/edit-transaction/edit-transaction.module#EditTransactionPageModule' },
-  { path: 'tabs/transactions/edit:id', loadChildren: './transactions/edit-transaction/edit-transaction.module#EditTransactionPageModule' }
+  { path: 'tabs/transactions/edit/:id', loadChildren: './transactions/edit-transaction/edit-transaction.module#EditTransactionPageModule' }
 ];
 @NgModule({
   imports: [

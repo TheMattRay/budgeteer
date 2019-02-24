@@ -63,7 +63,7 @@ export class StateService {
     this.currentTransactionItem = {
       id: -1,
       transactionType: '',
-      transactionDate: new Date(),
+      transactionDate: new Date().toISOString(),
       actualAmount: 0,
       estimatedAmount: null,
       note: '',
