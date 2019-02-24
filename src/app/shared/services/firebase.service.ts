@@ -4,16 +4,15 @@ import {reject} from 'q';
 import * as firebase from 'firebase';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {DataDump, DataDumpClass} from '../models/data-dump';
+import { BudgeteerCredential } from '../models/budgeteer-credential';
 
 @Injectable()
 export class FirebaseService {
   private rootReference: firebase.database.Reference;
-  private path: string;
   public lastData: any;
-  private token: string;
-  private guid: string;
-  private username: string;
-  private password: string;
+  private refreshToken: string;
+
+  private budgeteerCredential: BudgeteerCredential;
 
   constructor(
       public afs: AngularFireDatabase,
@@ -22,38 +21,34 @@ export class FirebaseService {
     this.getCredsFromStorage();
   }
 
+  // TODO: Add security for username/password
   private getCredsFromStorage() {
-    this.username = localStorage.getItem('fbUser');
-    this.password = localStorage.getItem('fbPass');
+    this.budgeteerCredential = localStorage.getItem('budgeteerCredential') ?
+      JSON.parse(localStorage.getItem('budgeteerCredential')) : {} as BudgeteerCredential;
+    this.authenticate();
   }
 
   private setCredsToStorage() {
-    localStorage.setItem('fbUser', this.username);
-    localStorage.setItem('fbPass', this.password);
+    localStorage.setItem('budgeteerCredential', JSON.stringify(this.budgeteerCredential));
   }
 
   public getGuid() {
-    return this.guid;
+    return this.budgeteerCredential.guid;
   }
 
   public getUsername() {
-    return this.username;
+    return this.budgeteerCredential.username;
   }
 
   public setCredentials(username: string, password: string) {
-    this.username = username;
-    this.password = password;
-    this.setCredsToStorage();
-    this.afauth.auth.signInWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
-      this.guid = userCredential.user.uid;
+    this.afauth.auth.signInWithEmailAndPassword(username, password).then((userCredential: firebase.auth.UserCredential) => {
       userCredential.user.getIdToken().then((token: string) => {
-        this.token = token;
-        this.path = '/data/' + this.guid;
-        this.rootReference = this.afs.database.ref(this.path);
+        this.makeBudgeteerCredential(userCredential, token);
+        this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
+        this.setCredsToStorage();
       });
     }).catch((error) => {
-      
-      switch(error.code) {
+      switch (error.code) {
         case 'auth/user-not-found':
           this.createUser(username, password);
           break;
@@ -66,57 +61,69 @@ export class FirebaseService {
   }
 
   private createUser(username: string, password: string) {
-    this.afauth.auth.createUserWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
-      this.guid = userCredential.user.uid;
+    this.afauth.auth.createUserWithEmailAndPassword(username, password).then((userCredential: firebase.auth.UserCredential) => {
       userCredential.user.getIdToken().then((token: string) => {
-        this.token = token;
-        this.path = '/data/' + this.guid;
-        this.rootReference = this.afs.database.ref(this.path);
+        this.makeBudgeteerCredential(userCredential, token);
+        this.setCredsToStorage();
+        this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
       });
     }).catch((error) => {
       console.log(error);
-    })
+    });
   }
 
   private authenticate(forceAuth?: boolean): Promise<any> {
-    if(this.token != null && this.token != '') {
+    if (this.budgeteerCredential.token != null && this.budgeteerCredential.token !== '') {
       // If we have authenticated, bypass
       return new Promise<any>((resolve, reject) => {
-        console.log(this.token);
         resolve();
-      })
+      }).catch((error) => {
+        console.log(error);
+        reject(error);
+      });
     }
     return new Promise<any>((resolve, reject) => {
-      if(!this.username || this.username == '') {
+      if (!this.budgeteerCredential.username || this.budgeteerCredential.username === '') {
         this.afauth.auth.signInAnonymously().then((userCredential: firebase.auth.UserCredential) => {
-          this.guid = userCredential.user.uid;
           userCredential.user.getIdToken().then((token: string) => {
-            this.token = token;
-            this.path = '/data/' + this.guid;
-            this.rootReference = this.afs.database.ref(this.path);
+            this.makeBudgeteerCredential(userCredential, token);
+            this.setCredsToStorage();
+            this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
             resolve();
           });
         });
       } else {
-        this.afauth.auth.signInWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
-          this.guid = userCredential.user.uid;
+        this.afauth.auth.signInWithEmailAndPassword(this.budgeteerCredential.username, this.budgeteerCredential.password)
+        .then((userCredential: firebase.auth.UserCredential) => {
           userCredential.user.getIdToken().then((token: string) => {
-            this.token = token;
-            this.path = '/data/' + this.guid;
-            this.rootReference = this.afs.database.ref(this.path);
+            this.makeBudgeteerCredential(userCredential, token);
+            this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
+            this.setCredsToStorage();
             resolve();
           });
         }).catch((error) => {
           console.log(error);
-        })
+          reject(error);
+        });
       }
     });
+  }
+
+  private makeBudgeteerCredential(userCredential: firebase.auth.UserCredential, token: string) {
+    this.budgeteerCredential = {
+      guid: userCredential.user.uid,
+      token: token,
+      refreshToken: userCredential.user.refreshToken,
+      path: '/data/' + userCredential.user.uid,
+      username: null,
+      password: null
+    } as BudgeteerCredential;
   }
 
   public getData(): Promise<DataDumpClass> {
     return new Promise<any>((resolve, reject) => {
       this.authenticate().then(() => {
-        this.afs.object(this.path).valueChanges().subscribe(item => {
+        this.afs.object(this.budgeteerCredential.path).valueChanges().subscribe(item => {
           this.lastData = item;
           const result: DataDumpClass = new DataDumpClass(item);
           resolve(result);
