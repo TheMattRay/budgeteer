@@ -19,6 +19,17 @@ export class FirebaseService {
       public afs: AngularFireDatabase,
       private afauth: AngularFireAuth
   ) {
+    this.getCredsFromStorage();
+  }
+
+  private getCredsFromStorage() {
+    this.username = localStorage.getItem('fbUser');
+    this.password = localStorage.getItem('fbPass');
+  }
+
+  private setCredsToStorage() {
+    localStorage.setItem('fbUser', this.username);
+    localStorage.setItem('fbPass', this.password);
   }
 
   public getGuid() {
@@ -32,22 +43,73 @@ export class FirebaseService {
   public setCredentials(username:string, password: string) {
     this.username = username;
     this.password = password;
+    this.setCredsToStorage();
     this.afauth.auth.signInWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
-      console.log(userCredential);
+      this.guid = userCredential.user.uid;
+      userCredential.user.getIdToken().then((token: string) => {
+        this.token = token;
+        this.path = '/data/' + this.guid;
+        this.rootReference = this.afs.database.ref(this.path);
+      });
+    }).catch((error) => {
+      
+      switch(error.code) {
+        case 'auth/user-not-found':
+          this.createUser(username, password);
+          break;
+
+        default:
+          console.log(error);
+          break;
+      }
     });
   }
 
-  private authenticate(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.afauth.auth.signInAnonymously().then((userCredential: firebase.auth.UserCredential) => {
-        this.guid = userCredential.user.uid;
-        userCredential.user.getIdToken().then((token: string) => {
-          this.token = token;
-          this.path = '/data/' + this.guid;
-          this.rootReference = this.afs.database.ref(this.path);
-          resolve();
-        });
+  private createUser(username: string, password: string) {
+    this.afauth.auth.createUserWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
+      this.guid = userCredential.user.uid;
+      userCredential.user.getIdToken().then((token: string) => {
+        this.token = token;
+        this.path = '/data/' + this.guid;
+        this.rootReference = this.afs.database.ref(this.path);
       });
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  private authenticate(forceAuth?: boolean): Promise<any> {
+    if(this.token != null && this.token != '') {
+      // If we have authenticated, bypass
+      return new Promise<any>((resolve, reject) => {
+        console.log(this.token);
+        resolve();
+      })
+    }
+    return new Promise<any>((resolve, reject) => {
+      if(!this.username || this.username == '') {
+        this.afauth.auth.signInAnonymously().then((userCredential: firebase.auth.UserCredential) => {
+          this.guid = userCredential.user.uid;
+          userCredential.user.getIdToken().then((token: string) => {
+            this.token = token;
+            this.path = '/data/' + this.guid;
+            this.rootReference = this.afs.database.ref(this.path);
+            resolve();
+          });
+        });
+      } else {
+        this.afauth.auth.signInWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
+          this.guid = userCredential.user.uid;
+          userCredential.user.getIdToken().then((token: string) => {
+            this.token = token;
+            this.path = '/data/' + this.guid;
+            this.rootReference = this.afs.database.ref(this.path);
+            resolve();
+          });
+        }).catch((error) => {
+          console.log(error);
+        })
+      }
     });
   }
 

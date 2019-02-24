@@ -45,29 +45,29 @@ export class BudgetPage implements OnInit {
 
   async presentAlertPrompt() {
     const alert = await this.alertController.create({
-      header: 'Setings',
+      header: 'Settings',
+      subHeader: 'Login Information',
       inputs: [
-        {
-          name: 'AccountGuid',
-          label: 'Account Guid',
-          type: 'text',
-          value: this.fbs.getGuid(),
-          placeholder: ''
-        },
+        // {
+        //   name: 'AccountGuid',
+        //   label: 'Account Guid',
+        //   type: 'text',
+        //   value: this.fbs.getGuid(),
+        //   placeholder: ''
+        // },
         {
           name: 'LoginUsername',
           label: 'Email',
           type: 'text',
           value: this.fbs.getUsername(),
-          placeholder: ''
-        }
-        ,
+          placeholder: 'Email'
+        },
         {
           name: 'LoginPassword',
           label: 'Password',
           type: 'password',
           value: '',
-          placeholder: ''
+          placeholder: 'Password'
         }
       ],
       buttons: [
