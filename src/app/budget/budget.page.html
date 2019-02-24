@@ -3,9 +3,15 @@
     <ion-title>
       Budget
     </ion-title>
+    <ion-label>
+      <span>{{this.getGuid()}}</span>
+    </ion-label>
     <ion-buttons slot="primary">
       <ion-button (click)="addBudgetItem()">
         <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+      <ion-button (click)="showSettings()">
+        <ion-icon slot="icon-only" name="settings"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

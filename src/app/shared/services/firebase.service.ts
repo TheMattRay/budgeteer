@@ -12,11 +12,29 @@ export class FirebaseService {
   public lastData: any;
   private token: string;
   private guid: string;
+  private username: string;
+  private password: string;
 
   constructor(
       public afs: AngularFireDatabase,
       private afauth: AngularFireAuth
   ) {
+  }
+
+  public getGuid() {
+    return this.guid;
+  }
+
+  public getUsername() {
+    return this.username;
+  }
+
+  public setCredentials(username:string, password: string) {
+    this.username = username;
+    this.password = password;
+    this.afauth.auth.signInWithEmailAndPassword(this.username, this.password).then((userCredential: firebase.auth.UserCredential) => {
+      console.log(userCredential);
+    });
   }
 
   private authenticate(): Promise<any> {

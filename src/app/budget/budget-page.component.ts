@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Platform} from '@ionic/angular';
+import {Platform, AlertController} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {BudgetItem} from '../shared/models/budget-item';
@@ -27,7 +27,8 @@ export class BudgetPage implements OnInit {
       private fbs: FirebaseService,
       private cs: CalculatorService,
       private stateService: StateService,
-      private router: Router
+      private router: Router,
+      private alertController: AlertController
   ) {
   }
 
@@ -41,6 +42,56 @@ export class BudgetPage implements OnInit {
       this.payPeriod = this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot);
     });
   }
+
+  async presentAlertPrompt() {
+    const alert = await this.alertController.create({
+      header: 'Setings',
+      inputs: [
+        {
+          name: 'AccountGuid',
+          label: 'Account Guid',
+          type: 'text',
+          value: this.fbs.getGuid(),
+          placeholder: ''
+        },
+        {
+          name: 'LoginUsername',
+          label: 'Email',
+          type: 'text',
+          value: this.fbs.getUsername(),
+          placeholder: ''
+        }
+        ,
+        {
+          name: 'LoginPassword',
+          label: 'Password',
+          type: 'password',
+          value: '',
+          placeholder: ''
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            this.fbs.setCredentials(data.LoginUsername, data.LoginPassword)
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+
 
   getActual(budgeItem: BudgetItem): number {
     return this.cs.GetCurrentPayPeriodTotalForCategory(budgeItem.name, this.stateService.currentDataSnapshot);
@@ -56,6 +107,16 @@ export class BudgetPage implements OnInit {
     } else {
       return 'radio-button-off';
     }
+  }
+
+  getGuid() {
+    return this.fbs.getGuid();
+  }
+
+  showSettings() {
+    // this.router.navigate(['/tabs/budget/settings']).then((value: boolean) => {
+    // });
+    this.presentAlertPrompt();
   }
 
   addBudgetItem() {
