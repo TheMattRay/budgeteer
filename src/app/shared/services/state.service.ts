@@ -27,6 +27,7 @@ export class StateService {
 
   private initThisB() {
     this.newBudgetItem();
+    this.newTransactionItem();
     this.currentBudget = [];
     this.currentTransactions = [];
     this.currentIncome = {} as IncomeItem;
@@ -56,6 +57,50 @@ export class StateService {
       TransactionItems: this.currentTransactions,
       Settings: this.currentSettings
     };
+  }
+
+  newTransactionItem() {
+    this.currentTransactionItem = {
+      id: -1,
+      transactionType: '',
+      transactionDate: new Date(),
+      actualAmount: 0,
+      estimatedAmount: null,
+      note: '',
+      vendorPlace: ''
+    };
+  }
+
+  setTransactionItemById(id: number) {
+    for (let i = 0; i < this.currentTransactions.length; i++) {
+      if (this.currentTransactions[i].id === id) {
+        this.currentTransactionItem = this.currentTransactions[i];
+        break;
+      }
+    }
+  }
+
+  saveTransactionItem() {
+    if (this.currentTransactionItem.id > -1) {
+      for (let i = 0; i < this.currentBudget.length; i++) {
+        if (this.currentTransactions[i].id === this.currentTransactionItem.id) {
+          this.currentTransactions[i] = this.currentTransactionItem;
+          break;
+        }
+      }
+    } else {
+      this.currentTransactionItem.id = this.getNewId(this.currentTransactions);
+      this.currentTransactions.push(this.currentTransactionItem);
+    }
+
+    // Set whole budget
+    this.currentDataSnapshot.TransactionItems = this.currentTransactions;
+
+    // Persist to FB
+    this.fbs.setData(this.currentDataSnapshot).then((value: any) => {
+      this.router.navigate(['/tabs/transactions']).then((value: boolean) => {
+      });
+    });
   }
 
   newBudgetItem() {

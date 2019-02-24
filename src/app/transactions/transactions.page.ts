@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {FirebaseService} from '../shared/services/firebase.service';
 import {DataDumpClass} from '../shared/models/data-dump';
 import {CalculatorService} from '../shared/services/calculator.service';
@@ -6,6 +6,7 @@ import {PayPeriodClass} from '../shared/models/pay-period';
 import {StateService} from '../shared/services/state.service';
 import {Router} from '@angular/router';
 import { TransactionItem } from '../shared/models/transaction-item';
+import { EditTransactionPage } from './edit-transaction/edit-transaction.page';
 
 @Component({
   selector: 'app-tab3',
@@ -13,6 +14,8 @@ import { TransactionItem } from '../shared/models/transaction-item';
   styleUrls: ['transactions.page.scss']
 })
 export class TransactionsPage implements OnInit {
+  @ViewChild( EditTransactionPage )
+  private editPage: EditTransactionPage;
 
   private listOfTransactions: TransactionItem[];
   private payPeriod: PayPeriodClass;
@@ -48,6 +51,13 @@ export class TransactionsPage implements OnInit {
 
       // Set pay period
       this.payPeriod = this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot);
+    });
+  }
+
+  addTransaction() {
+    this.stateService.newTransactionItem();
+
+    this.router.navigate(['/tabs/transactions/edit']).then((value: boolean) => {
     });
   }
 }
