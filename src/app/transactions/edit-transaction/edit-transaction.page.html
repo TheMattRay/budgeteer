@@ -1,9 +1,45 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Transaction Item</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button [routerLink]="trashRoute">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-
+  <ion-item>
+    <ion-label>Date:</ion-label>
+    <ion-datetime display-format="MM/DD/YYYY" picker-format="MM DD YYYY" [(ngModel)]="this.transactionDate"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>Type:</ion-label>
+    <ion-select placeholder="Select Type">
+      <ion-select-option *ngFor="let budgetItem of getBudgetSortedByName()" (value)="budgetItem.nane" (change)="budgetItemChanged()">{{budgetItem.name}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Amount:</ion-label>
+    <ion-input [(ngModel)]="stateService.currentTransactionItem.actualAmount" type="number"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Est Amount:</ion-label>
+    <ion-input readonly [(ngModel)]="stateService.currentTransactionItem.estimatedAmount" type="number"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Vendor/Place:</ion-label>
+    <ion-input [(ngModel)]="stateService.currentTransactionItem.vendorPlace"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Note:</ion-label>
+    <ion-input [(ngModel)]="stateService.currentTransactionItem.note"></ion-input>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-button color="primary" (click)="this.saveTransactionItem()" size="large">Save</ion-button>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-button color="secondary" [routerLink]="['/tabs/transactions']">Cancel</ion-button>
+  </ion-item>
 </ion-content>
