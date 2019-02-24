@@ -38,6 +38,16 @@ export class BudgetPage implements OnInit {
       this.stateService.setSnapshot(dataSnapshot);
       this.listOfBudgetItems = this.stateService.currentBudget;
 
+      // Sort items by date
+      this.listOfBudgetItems.sort((a: BudgetItem, b: BudgetItem) => {
+        if (a.dueDay < b.dueDay) {
+          return -1;
+        }
+        if (a.dueDay > b.dueDay) {
+          return 1;
+        }
+      });
+
       // Set pay period
       this.payPeriod = this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot);
     });

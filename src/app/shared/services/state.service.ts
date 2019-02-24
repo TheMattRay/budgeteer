@@ -79,6 +79,15 @@ export class StateService {
     }
   }
 
+  saveIncomeItem() {
+    // Set whole budget
+    this.currentDataSnapshot.IncomeItem = this.currentIncome;
+
+    // Persist to FB
+    this.fbs.setData(this.currentDataSnapshot).then((value: any) => {
+    });
+  }
+
   saveBudgetItem() {
     if (this.currentBudgetItem.id > -1) {
       for (let i = 0; i < this.currentBudget.length; i++) {
@@ -125,9 +134,13 @@ export class StateService {
     }
     if (a.dueDay < b.dueDay) {
       return -1;
+    } else if (a.dueDay > b.dueDay) {
+      return +1;
     }
     if (a.name < b.name) {
       return -1;
+    } else if (a.name > b.name) {
+      return +1;
     }
     return 0;
   }

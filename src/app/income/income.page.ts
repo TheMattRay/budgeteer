@@ -6,6 +6,7 @@ import {CalculatorService} from '../shared/services/calculator.service';
 import {StateService} from '../shared/services/state.service';
 import {Router} from '@angular/router';
 import {DataDumpClass} from '../shared/models/data-dump';
+import { IncomeItem } from '../shared/models/income-item';
 
 @Component({
   selector: 'app-tab2',
@@ -68,10 +69,21 @@ export class IncomePage implements OnInit {
   }
 
   formatShortDate(period: Date) {
-    return period.getMonth() + '/' + period.getDate() + '/' + period.getFullYear();
+    return period.getMonth() + 1 + '/' + period.getDate() + '/' + period.getFullYear();
   }
 
   calculate() {
+    const currentTransactionTotals = this.cs.GetPayPeriodTransactionTotals(this.stateService.currentDataSnapshot);
+    this.expectedExpenses = this.cs.GetExpectedTotalAmount(this.stateService.currentDataSnapshot);
+    this.expectedRemainingAfterExpenses = Math.round(this.stateService.currentIncome.expectedPay - this.expectedExpenses);
+    this.currentTransactionTotal = this.cs.GetFullPayPeriodTransactionTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod);
+    this.remainingExpenses = this.cs.GetCurrentPayPeriodRemainingTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod);
+    this.estimatedRemainingBalance = Math.round(Number.parseFloat(this.stateService.currentIncome.actualPay.toString()) +
+      Number.parseFloat(this.stateService.currentIncome.carryover.toString()) - Number.parseFloat(this.currentTransactionTotal.toString())
+      - Number.parseFloat(this.remainingExpenses.toString()));
+  }
 
+  saveChanges() {
+    this.stateService.saveIncomeItem();
   }
 }

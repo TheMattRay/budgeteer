@@ -30,13 +30,13 @@
       <ion-col>
         <ion-item>
           <ion-label>Expected:</ion-label>
-          <ion-input [(ngModel)]="stateService.currentIncome.expectedPay"></ion-input>
+          <ion-input [(ngModel)]="stateService.currentIncome.expectedPay" (focusout)="saveChanges()"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label>Actual:</ion-label>
-          <ion-input [(ngModel)]="stateService.currentIncome.actualPay"></ion-input>
+          <ion-input [(ngModel)]="stateService.currentIncome.actualPay" (focusout)="saveChanges()"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -49,13 +49,13 @@
       <ion-col>
         <ion-item>
           <ion-label>Expected:</ion-label>
-          <ion-input [(ngModel)]="expectedExpenses"></ion-input>
+          <ion-input [(ngModel)]="expectedExpenses" readonly></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label>Est I - E:</ion-label>
-          <ion-input [(ngModel)]="expectedRemainingAfterExpenses"></ion-input>
+          <ion-input [(ngModel)]="expectedRemainingAfterExpenses" readonly></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -68,13 +68,13 @@
       <ion-col>
         <ion-item>
           <ion-label>Current:</ion-label>
-          <ion-input [(ngModel)]="currentTransactionTotal"></ion-input>
+          <ion-input [(ngModel)]="currentTransactionTotal" readonly></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label>To Go:</ion-label>
-          <ion-input [(ngModel)]="remainingExpenses"></ion-input>
+          <ion-input [(ngModel)]="remainingExpenses" readonly></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -87,13 +87,13 @@
       <ion-col>
         <ion-item>
           <ion-label>Carryover:</ion-label>
-          <ion-input [(ngModel)]="stateService.currentIncome.carryover"></ion-input>
+          <ion-input [(ngModel)]="stateService.currentIncome.carryover" (focusout)="saveChanges()"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label>Est @ End:</ion-label>
-          <ion-input [(ngModel)]="estimatedRemainingBalance"></ion-input>
+          <ion-input [(ngModel)]="estimatedRemainingBalance" readonly></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>

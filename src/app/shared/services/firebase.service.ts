@@ -8,10 +8,7 @@ import { BudgeteerCredential } from '../models/budgeteer-credential';
 
 @Injectable()
 export class FirebaseService {
-  private rootReference: firebase.database.Reference;
   public lastData: any;
-  private refreshToken: string;
-
   private budgeteerCredential: BudgeteerCredential;
 
   constructor(
@@ -44,7 +41,6 @@ export class FirebaseService {
     this.afauth.auth.signInWithEmailAndPassword(username, password).then((userCredential: firebase.auth.UserCredential) => {
       userCredential.user.getIdToken().then((token: string) => {
         this.makeBudgeteerCredential(userCredential, token);
-        this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
         this.setCredsToStorage();
       });
     }).catch((error) => {
@@ -65,7 +61,6 @@ export class FirebaseService {
       userCredential.user.getIdToken().then((token: string) => {
         this.makeBudgeteerCredential(userCredential, token);
         this.setCredsToStorage();
-        this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
       });
     }).catch((error) => {
       console.log(error);
@@ -88,7 +83,6 @@ export class FirebaseService {
           userCredential.user.getIdToken().then((token: string) => {
             this.makeBudgeteerCredential(userCredential, token);
             this.setCredsToStorage();
-            this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
             resolve();
           });
         });
@@ -97,7 +91,6 @@ export class FirebaseService {
         .then((userCredential: firebase.auth.UserCredential) => {
           userCredential.user.getIdToken().then((token: string) => {
             this.makeBudgeteerCredential(userCredential, token);
-            this.rootReference = this.afs.database.ref(this.budgeteerCredential.path);
             this.setCredsToStorage();
             resolve();
           });
@@ -135,7 +128,7 @@ export class FirebaseService {
   public setData(value: DataDump): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.authenticate().then(() => {
-        this.rootReference.set(value)
+        this.afs.object(this.budgeteerCredential.path).set(value)
             .then(_ => {
               console.log('success');
               resolve();
