@@ -17,19 +17,19 @@ export class IncomePage {
   private currentPayPeriod: PayPeriodClass;
   private expectedPay: number;
   private actualPay: number;
-  private expectedExpenses: number;
-  private expectedRemainingAfterExpenses: number;
-  private currentTransactionTotal: number;
-  private remainingExpenses: number;
-  private carryover: number;
-  private estimatedRemainingBalance: number;
+  public expectedExpenses: number;
+  public expectedRemainingAfterExpenses: number;
+  public currentTransactionTotal: number;
+  public remainingExpenses: number;
+  public carryover: number;
+  public estimatedRemainingBalance: number;
 
   private earliestPayPeriod: PayPeriodClass;
 
   constructor(
       private fbs: FirebaseService,
       private cs: CalculatorService,
-      private stateService: StateService,
+      public stateService: StateService,
       private router: Router
   ) {
   }

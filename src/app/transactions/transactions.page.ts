@@ -17,7 +17,7 @@ export class TransactionsPage {
   @ViewChild( EditTransactionPage )
   private editPage: EditTransactionPage;
 
-  private listOfTransactions: TransactionItem[];
+  public listOfTransactions: TransactionItem[];
   private payPeriod: PayPeriodClass;
 
   constructor(

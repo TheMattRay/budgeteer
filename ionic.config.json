@@ -1,5 +1,7 @@
 {
   "name": "Budgeteer",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

@@ -10,7 +10,7 @@ import {StateService} from '../../shared/services/state.service';
 })
 
 export class EditPage implements OnInit {
-  private trashRoute = 'delete';
+  public trashRoute = 'delete';
   private id: number = null;
 
   constructor(

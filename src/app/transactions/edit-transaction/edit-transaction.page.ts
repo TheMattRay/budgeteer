@@ -10,7 +10,7 @@ import { BudgetItem } from 'src/app/shared/models/budget-item';
   styleUrls: ['./edit-transaction.page.scss'],
 })
 export class EditTransactionPage implements OnInit {
-  private trashRoute = 'delete';
+  public trashRoute = 'delete';
   private id: number = null;
 
   constructor(
