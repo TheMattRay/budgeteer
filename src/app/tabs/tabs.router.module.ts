@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { IncomePage } from '../income/income.page';
 
 const routes: Routes = [
   {
@@ -36,15 +37,57 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/budget',
-        pathMatch: 'full'
+        children: [
+          {
+            path: '',
+            loadChildren: '../budget/budget.module#BudgetPageModule'
+          }
+        ]
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/budget',
-    pathMatch: 'full'
+    component: TabsPage,
+    redirectTo: 'tabs',
+    children: [
+      {
+        path: 'budget',
+        children: [
+          {
+            path: '',
+            loadChildren: '../budget/budget.module#BudgetPageModule'
+          }
+        ]
+      },
+      {
+        path: 'income',
+        children: [
+          {
+            path: '',
+            loadChildren: '../income/income.module#IncomePageModule'
+          }
+        ]
+      },
+      {
+        path: 'transactions',
+        children: [
+          {
+            path: '',
+            loadChildren: '../transactions/transactions.module#TransactionsPageModule'
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: '',
+            loadChildren: '../budget/budget.module#BudgetPageModule'
+          }
+        ]
+      }
+    ]
   }
 ];
 

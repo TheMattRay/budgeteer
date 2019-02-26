@@ -104,7 +104,7 @@ export class CalculatorService {
 
   GetPayPeriodTotalForCategory(category: string, dataSnapshot: DataDumpClass, payPeriod?: PayPeriodClass): number {
     const currentTotals = this.GetPayPeriodTransactionTotals(dataSnapshot, payPeriod);
-    if (currentTotals[category] === null) {
+    if (currentTotals[category] === null || currentTotals[category] === undefined) {
       return 0;
     } else {
       return currentTotals[category];
