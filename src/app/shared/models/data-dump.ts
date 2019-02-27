@@ -7,6 +7,7 @@ export interface DataDump {
     IncomeItem: IncomeItem;
     TransactionItems: TransactionItem[];
     Settings: any;
+    ArchivedTransactions: TransactionItem[];
 }
 
 export class DataDumpClass implements DataDump {
@@ -14,6 +15,7 @@ export class DataDumpClass implements DataDump {
     public IncomeItem: IncomeItem;
     public TransactionItems: TransactionItem[];
     public Settings: any;
+    public ArchivedTransactions: TransactionItem[];
 
     constructor(item: any) {
         if (item === null) {
@@ -21,11 +23,13 @@ export class DataDumpClass implements DataDump {
             this.IncomeItem = {} as IncomeItem;
             this.TransactionItems = [];
             this.Settings = {};
+            this.ArchivedTransactions = [];
             return;
         }
         this.BudgetItems = item.BudgetItems;
         this.IncomeItem = item.IncomeItem;
         this.TransactionItems = item.TransactionItems;
         this.Settings = item.Settings;
+        this.ArchivedTransactions = item.ArchivedTransactions;
     }
 }

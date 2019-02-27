@@ -30,7 +30,7 @@
       <ion-col>
         <ion-item>
           <ion-label>Expected:</ion-label>
-          <ion-input [(ngModel)]="stateService.currentIncome.expectedPay" (focusout)="saveChanges()"></ion-input>
+          <ion-input [(ngModel)]="stateService.currentIncome.expectedPay" (focusout)="saveChanges()" type="number"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col>
@@ -98,7 +98,7 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-
-
+  <ion-item lines="none">
+    <ion-button color="primary" (click)="presentAlertPrompt()" size="large">Start new pay period</ion-button>
+  </ion-item>
 </ion-content>

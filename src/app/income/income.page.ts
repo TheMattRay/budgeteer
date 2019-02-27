@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Platform, AlertController} from '@ionic/angular';
 import {BudgetItem} from '../shared/models/budget-item';
 import {PayPeriodClass} from '../shared/models/pay-period';
 import {FirebaseService} from '../shared/services/firebase.service';
@@ -30,7 +31,8 @@ export class IncomePage {
       private fbs: FirebaseService,
       private cs: CalculatorService,
       public stateService: StateService,
-      private router: Router
+      private router: Router,
+      private alertController: AlertController
   ) {
   }
 
@@ -80,7 +82,7 @@ export class IncomePage {
     this.expectedExpenses = Math.round(this.cs.GetExpectedTotalAmount(this.stateService.currentDataSnapshot, this.currentPayPeriod));
     this.expectedRemainingAfterExpenses = Math.round(this.stateService.currentIncome.expectedPay - this.expectedExpenses);
     this.currentTransactionTotal = Math.round(this.cs.GetFullPayPeriodTransactionTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod));
-    this.remainingExpenses = this.cs.GetCurrentPayPeriodRemainingTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod);
+    this.remainingExpenses = Math.round(this.cs.GetCurrentPayPeriodRemainingTotal(this.stateService.currentDataSnapshot, this.currentPayPeriod));
     this.estimatedRemainingBalance = Math.round(Number.parseFloat(this.stateService.currentIncome.actualPay.toString()) +
       Number.parseFloat(this.stateService.currentIncome.carryover.toString()) - Number.parseFloat(this.currentTransactionTotal.toString())
       - Number.parseFloat(this.remainingExpenses.toString()));
@@ -88,5 +90,29 @@ export class IncomePage {
 
   saveChanges() {
     this.stateService.saveIncomeItem();
+  }
+
+  async presentAlertPrompt() {
+    const alert = await this.alertController.create({
+      header: 'Warning',
+      subHeader: '',
+      message: 'Continuing will archive your transactions and clear them from the transactions view. Do you wish to continue?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Continue',
+          handler: () => {
+            this.stateService.newPayPeriod();
+          }
+        }
+      ]
+    });
+
+    return await alert.present();
   }
 }

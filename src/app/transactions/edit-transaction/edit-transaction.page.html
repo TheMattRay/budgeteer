@@ -22,11 +22,11 @@
   </ion-item>
   <ion-item>
     <ion-label>Amount:</ion-label>
-    <ion-input [(ngModel)]="stateService.currentTransactionItem.actualAmount" type="number"></ion-input>
+    <ion-input [(ngModel)]="stateService.currentTransactionItem.actualAmount" type="number" class="money"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Est Amount:</ion-label>
-    <ion-input readonly [(ngModel)]="stateService.currentTransactionItem.estimatedAmount" type="number"></ion-input>
+    <ion-input readonly [(ngModel)]="stateService.currentTransactionItem.estimatedAmount" type="number" class="money"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>Vendor/Place:</ion-label>

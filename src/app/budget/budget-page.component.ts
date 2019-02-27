@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import {Platform, AlertController} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
@@ -16,19 +16,21 @@ import {Router} from '@angular/router';
   templateUrl: 'budget.page.html',
   styleUrls: ['budget.page.scss']
 })
-export class BudgetPage {
+export class BudgetPage implements AfterViewInit {
   @ViewChild( EditPage )
     private editPage: EditPage;
 
   listOfBudgetItems: BudgetItem[];
   private payPeriod: PayPeriodClass;
+  private todayMarker: number;
 
   constructor(
       private fbs: FirebaseService,
       private cs: CalculatorService,
       private stateService: StateService,
       private router: Router,
-      private alertController: AlertController
+      private alertController: AlertController,
+      private cd: ChangeDetectorRef
   ) {
   }
 
@@ -50,7 +52,18 @@ export class BudgetPage {
 
       // Set pay period
       this.payPeriod = this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot);
+
+      // Set marker for today
+      this.todayMarker = this.setTodayMarker();
     });
+  }
+
+  ngAfterViewInit() {
+    this.cd.detectChanges();
+  }
+
+  private setTodayMarker(): number {
+    return new Date().getDate();
   }
 
   async presentAlertPrompt() {
@@ -58,13 +71,6 @@ export class BudgetPage {
       header: 'Settings',
       subHeader: 'Login Information',
       inputs: [
-        // {
-        //   name: 'AccountGuid',
-        //   label: 'Account Guid',
-        //   type: 'text',
-        //   value: this.fbs.getGuid(),
-        //   placeholder: ''
-        // },
         {
           name: 'LoginUsername',
           label: 'Email',
@@ -117,10 +123,17 @@ export class BudgetPage {
     }
   }
 
-  getLineClass(budgetItem: BudgetItem): string {
+  getLineClass(budgetItem: BudgetItem, index: number): string {
+    let rowClass = '';
     const isInPeriod: boolean = this.cs.IsDayInPayPeriod(budgetItem.dueDay,
       this.cs.GetCurrentPayPeriod(this.stateService.currentDataSnapshot));
-    return isInPeriod ? 'highlight' : '';
+    rowClass += isInPeriod ? 'highlight ' : '';
+
+    if (budgetItem.dueDay >= this.todayMarker) {
+      rowClass += 'today';
+    }
+
+    return rowClass;
   }
 
   getGuid() {
@@ -128,8 +141,6 @@ export class BudgetPage {
   }
 
   showSettings() {
-    // this.router.navigate(['/tabs/budget/settings']).then((value: boolean) => {
-    // });
     this.presentAlertPrompt();
   }
 

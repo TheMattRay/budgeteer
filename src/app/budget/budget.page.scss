@@ -6,3 +6,11 @@
 .highlight {
   background-color: rgba(100,240,240, 0.5);
 }
+
+.today {
+  border-top: 2px dashed green;
+}
+
+.today ~ .today {
+  border-top: none;
+}

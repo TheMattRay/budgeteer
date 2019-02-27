@@ -17,6 +17,7 @@ export class StateService {
   public currentTransactions: TransactionItem[];
   public currentIncome: IncomeItem;
   public currentSettings: any;
+  public currentArchivedTransactions: TransactionItem[];
 
   constructor(
       private router: Router,
@@ -32,6 +33,7 @@ export class StateService {
     this.currentTransactions = [];
     this.currentIncome = {} as IncomeItem;
     this.currentSettings = {};
+    this.currentArchivedTransactions = [];
     this.fbs.getData().then((dataSnapshot: DataDumpClass) => {
       this.setSnapshot(dataSnapshot);
     });
@@ -48,14 +50,15 @@ export class StateService {
         {} as IncomeItem : dataSnapshot.IncomeItem;
     this.currentTransactions = dataSnapshot.TransactionItems === undefined ? [] : dataSnapshot.TransactionItems;
     this.currentSettings = dataSnapshot.Settings === undefined ? {} : dataSnapshot.Settings;
-
+    this.currentArchivedTransactions = dataSnapshot.ArchivedTransactions === undefined ? [] : dataSnapshot.ArchivedTransactions;
     this.currentBudget.sort(this.budgetSorter);
 
     this.currentDataSnapshot = {
       BudgetItems: this.currentBudget,
       IncomeItem: this.currentIncome,
       TransactionItems: this.currentTransactions,
-      Settings: this.currentSettings
+      Settings: this.currentSettings,
+      ArchivedTransactions: this.currentArchivedTransactions
     };
   }
 
@@ -195,6 +198,12 @@ export class StateService {
       return value.name === name;
     });
   }
+
+  newPayPeriod() {
+    this.currentArchivedTransactions.concat(this.currentTransactions);
+    this.currentTransactions = [];
+    this.currentDataSnapshot.ArchivedTransactions = this.currentArchivedTransactions;
+    this.currentDataSnapshot.TransactionItems = this.currentTransactions;
+    this.setSnapshot(this.currentDataSnapshot);
+  }
 }
-
-

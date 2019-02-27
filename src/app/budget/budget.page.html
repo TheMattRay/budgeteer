@@ -35,15 +35,15 @@
     </ion-row>
   </ion-grid>
   <ion-grid>
-    <ion-row *ngFor="let budgetItem of listOfBudgetItems" [routerLink]="['/tabs/budget/edit', budgetItem.id]" [class]="getLineClass(budgetItem)">
+    <ion-row *ngFor="let budgetItem of listOfBudgetItems; index as i" [routerLink]="['/tabs/budget/edit', budgetItem.id]" [class]="getLineClass(budgetItem, i)">
       <ion-col>
         {{budgetItem.name}}
       </ion-col>
       <ion-col size="2">
-        {{budgetItem.averagePayment}}
+        ${{budgetItem.averagePayment}}
       </ion-col>
       <ion-col size="2">
-        {{getActual(budgetItem)}}
+        ${{getActual(budgetItem)}}
       </ion-col>
       <ion-col size="2">
         {{budgetItem.dueDay}}
