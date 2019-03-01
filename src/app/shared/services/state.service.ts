@@ -5,6 +5,7 @@ import {TransactionItem} from '../models/transaction-item';
 import {Router} from '@angular/router';
 import {FirebaseService} from './firebase.service';
 import {IncomeItem} from '../models/income-item';
+import { CalculatorService } from './calculator.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class StateService {
 
   constructor(
       private router: Router,
-      private fbs: FirebaseService
+      private fbs: FirebaseService,
+      private cs: CalculatorService
   ) {
     this.initThisB();
   }
@@ -200,10 +202,16 @@ export class StateService {
   }
 
   newPayPeriod() {
-    this.currentArchivedTransactions.concat(this.currentTransactions);
+    this.currentArchivedTransactions = this.currentArchivedTransactions === undefined ? [] : this.currentArchivedTransactions;
+    this.currentArchivedTransactions = this.currentArchivedTransactions.concat(this.currentTransactions);
     this.currentTransactions = [];
     this.currentDataSnapshot.ArchivedTransactions = this.currentArchivedTransactions;
     this.currentDataSnapshot.TransactionItems = this.currentTransactions;
-    this.setSnapshot(this.currentDataSnapshot);
+    this.currentDataSnapshot.BudgetItems = this.currentBudget;
+    this.currentDataSnapshot.IncomeItem = this.currentIncome;
+    this.currentDataSnapshot.Settings = this.currentSettings;
+    this.fbs.setData(this.currentDataSnapshot).then(() => {
+      this.initThisB();
+    });
   }
 }

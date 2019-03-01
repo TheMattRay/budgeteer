@@ -27,23 +27,30 @@ export class CalculatorService {
         targetDate.setDate(targetDate.getDate() + 14);
         measureDate = targetDate;
         measureDate.setDate(targetDate.getDate() + 14);
-      } while (targetDate <= today && measureDate <= today);
+        console.log(today);
+        console.log(targetDate);
+        console.log(measureDate);
+      } while (targetDate.getTime() <= today.getTime() && measureDate.getTime() <= today.getTime());
 
       return(new PayPeriodClass(targetDate, measureDate));
     }
+  }
+
+  GetJustDateString(date: Date): string {
+    const result = (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + '/' + date.getUTCFullYear();
+    return result;
   }
 
   GetAssumedPayPeriod(): PayPeriodClass {
     const startDate = new Date(2019, 1, 15);
     const today = new Date((new Date()).toDateString());
     const targetDate = new Date(2019, 1, 15);
-    let measureDate = new Date();
-    measureDate.setDate(targetDate.getDate() + 14);
-    measureDate = new Date(measureDate.toDateString());
+    let measureDate = new Date(2019, 1, 28);
+    measureDate = new Date(this.GetJustDateString(measureDate));
 
-    while (today.getTime() <= targetDate.getTime()) {
+    while (today.getTime() > measureDate.getTime()) {
       targetDate.setDate(targetDate.getDate() + 14);
-      measureDate.setDate(targetDate.getDate() + 14);
+      measureDate.setDate(measureDate.getDate() + 14);
     }
     return new PayPeriodClass(targetDate, measureDate);
   }
