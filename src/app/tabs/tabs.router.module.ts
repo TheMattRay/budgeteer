@@ -45,6 +45,11 @@ const routes: Routes = [
         ]
       }
     ]
+  },
+  {
+    path: '',
+    redirectTo: '/tabs/budget',
+    pathMatch: 'full'
   }
 ];
 
