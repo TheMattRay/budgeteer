@@ -27,9 +27,6 @@ export class CalculatorService {
         targetDate.setDate(targetDate.getDate() + 14);
         measureDate = targetDate;
         measureDate.setDate(targetDate.getDate() + 14);
-        console.log(today);
-        console.log(targetDate);
-        console.log(measureDate);
       } while (targetDate.getTime() <= today.getTime() && measureDate.getTime() <= today.getTime());
 
       return(new PayPeriodClass(targetDate, measureDate));
@@ -72,7 +69,7 @@ export class CalculatorService {
 
   GetBudgetItemsForPayPeriod(dataSnapshot: DataDumpClass, payPeriod: PayPeriodClass): BudgetItem[] {
     const activeBudgetItems = dataSnapshot.BudgetItems.filter((value: BudgetItem, index: number, array: BudgetItem[]) => {
-      return this.IsDayInPayPeriod(value.dueDay, payPeriod);
+      return this.IsDayInPayPeriod(value.dueDay, payPeriod) || value.everyPayPeriod === true;
     });
     return activeBudgetItems;
   }
