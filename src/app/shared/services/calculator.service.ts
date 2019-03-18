@@ -129,7 +129,7 @@ export class CalculatorService {
   }
 
   IsDayInPayPeriod(day: number, payPeriod: PayPeriodClass): boolean {
-    if (day >= payPeriod.StartDate.getDate() && day < payPeriod.EndDate.getDate()
+    if (day >= payPeriod.StartDate.getDate() && day <= payPeriod.EndDate.getDate()
       && payPeriod.EndDate.getDate() > payPeriod.StartDate.getDate()) {
       // Day falls in between smaller start and larger end
       return true;
@@ -137,7 +137,7 @@ export class CalculatorService {
     if (day >= payPeriod.StartDate.getDate() && payPeriod.EndDate.getDate() < payPeriod.StartDate.getDate()) {
       return true;
     }
-    if (day < payPeriod.StartDate.getDate() && day < payPeriod.EndDate.getDate()
+    if (day < payPeriod.StartDate.getDate() && day <= payPeriod.EndDate.getDate()
       && payPeriod.EndDate.getDate() < payPeriod.StartDate.getDate()) {
       return true;
     }
